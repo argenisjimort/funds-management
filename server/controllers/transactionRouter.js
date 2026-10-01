@@ -13,8 +13,11 @@ transanctionRouter.get(`/`, async (request, response, next) => {
 transanctionRouter.post(`/`, userExtractor, async (request, response, next) => {
     // logger.info(request.user)
     // logger.info(request.body)
+
+    const {amount, ...resOfInfo} = request.body
+    const amountInCents = Math.floor(amount * 100)
     
-    const res = await Transaction.create({...request.body, "user": request.user.id})
+    const res = await Transaction.create({amountInCents, ...resOfInfo, "user": request.user.id})
     response.json(res)
 })
 

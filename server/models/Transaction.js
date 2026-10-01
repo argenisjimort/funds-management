@@ -2,9 +2,9 @@ const mongoose = require(`mongoose`)
 
 
 const transanctionSchema = mongoose.Schema({
-    amount: {type: Number, required: true},
+    amountInCents: {type: Number, required: true},
     currency: {type: String, default: `COP`},
-    type: { type: String, enum: [`income`, `expense`, `transfer`], required: true },
+    type: { type: String, enum: [`INCOME`, `EXPENSE`, `TRANSFER`], required: true },
     category: {type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true},
     description: {type: String},
     date: {type: Date, default: Date.now, required: true},
@@ -21,9 +21,11 @@ transanctionSchema.set(`toJSON`, {
     transform: (object, returnedObject) => {
 
         returnedObject.id = returnedObject._id
+        returnedObject.amount = (returnedObject.amountInCents / 100)
 
         delete returnedObject._id
         delete returnedObject.__v
+        // delete returnedObject.amountInCents
     }
 })
 

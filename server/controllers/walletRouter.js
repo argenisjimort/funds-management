@@ -6,22 +6,26 @@ const logger = require(`../utils/logger`)
 const Wallet = require(`../models/Wallet`)
 /** @type {import('mongoose').Model} */
 const User = require(`../models/User`)
+/** @type {import('mongoose').Model} */
+const Transaction = require(`../models/Transaction`)
 
 
 walletRouter.get(`/`, async (request, response, next) => {
     const res = await Wallet.find({})
+    console.log(res.data)
     response.json(res)
 })
-
-
-
 
 walletRouter.get(`/:id`, async (request, response, next) => {
     const res = await Wallet.findById(request.params.id)
     if(!res) return response.status(400).json({error: "NOT FOUND"}) //return needed just so it doesnt exceute anything else
-    response.json(res)
+    const res2 = await Transaction.find({wallet: request.params.id})
+    // logger.info(res2)
+    const walletWithTransactions = {...res.toJSON(), transactions: res2}
+    // console.log( allResponse )
+    
+    response.json(walletWithTransactions)
 })
-
 
 //  name: {type: String, required: true},
 //     currency: {type: String, default: `COP`},
@@ -31,10 +35,14 @@ walletRouter.get(`/:id`, async (request, response, next) => {
 
 
 walletRouter.post(`/`, userExtractor,  async (request, response, next) => {
-    const {name, ...restOfInfo} = request.body
+    const {name, initialAmount, ...restOfInfo} = request.body
     // logger.info(`after comming back to the post '/'`)
     // logger.info(name, restOfInfo)
+    console.log(initialAmount)
 
+    const initialAmountInCents = Math.floor(initialAmount * 100)
+
+    console.log(initialAmountInCents)
     if(name.length < 3) return response.status(400).send({error: `Wallet name too short`})
     
     // const OwnerUser = await User.findById(request.user) //request.user comes from the middleware 'userExtractor'
@@ -48,6 +56,7 @@ walletRouter.post(`/`, userExtractor,  async (request, response, next) => {
     const res = await Wallet.create({
         name,
         user: request.user.id,
+        initialAmountInCents,
         ...restOfInfo,
 
     }) // if this fails it throwns an error

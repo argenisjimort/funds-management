@@ -3,7 +3,7 @@ import { getRequestAuthHeader } from "../utils/requestAuthHeader";
 import { transactionsApiURl } from "../utils/config";
 
 
-export const createTransaction = async (amount, currency, category, wallet, description='', type, toWallet='NA' ) => {
+export const createTransaction = async (amount, currency, category, wallet, description='', type, toWallet=null ) => {
     // amount: { type: Number, required: true },
     // currency: { type: String, default: `COP` },
     // category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
@@ -20,5 +20,5 @@ export const createTransaction = async (amount, currency, category, wallet, desc
     // toWallet: { type: mongoose.Schema.Types.ObjectId, ref: `Wallet` }
 
     const response = await axios.post(transactionsApiURl, {amount, currency, category, wallet, description, type, toWallet}, getRequestAuthHeader())
-
+    return (response)
 }

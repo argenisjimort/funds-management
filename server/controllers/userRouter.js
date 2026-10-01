@@ -7,10 +7,15 @@ const { userExtractor }= require(`../utils/middleware`)
 
 /** @type {import('mongoose').Model} */
 const User = require(`../models/User`)
+
 /** @type {import('mongoose').Model} */
 const Category = require(`../models/Category`)
+
 /** @type {import('mongoose').Model} */
 const Wallet = require(`../models/Wallet`)
+
+/** @type {import('mongoose').Model} */
+const Transaction = require(`../models/Transaction`)
 
 const { DEFAULT_USER_CATEGORIES } = require('../utils/config')
 
@@ -54,9 +59,19 @@ userRouter.get(`/me/categories`, userExtractor, async (request, response, next) 
 
 
 userRouter.get(`/me/wallets`, userExtractor, async (request, response, next) => {
-    const res = await Wallet.find({user: request.user.id})
+    const wallets = await Wallet.find({user: request.user.id})
+
+    const walletsAndTransactions = await Promise.all(
+        wallets.map( async wallet => {
+            const transactions = await Transaction.find({ wallet: wallet.id })
+            return ({ ...wallet.toJSON(), transactions: transactions })
+        } )
+    )
+
+
     // logger.info(res)
-    response.json(res)
+    // console.log(walletsAndTransactions)
+    response.json(walletsAndTransactions)
 })
 
 

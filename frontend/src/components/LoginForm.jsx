@@ -20,7 +20,7 @@ const LoginForm = () => {
             await logIn(username.value, password.value)
             navigate(from, {replace: true})
         } catch (error) {
-            logger.info('error loggin in')
+            logger.error('error loggin in')
         }
         
     }

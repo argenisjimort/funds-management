@@ -35,7 +35,7 @@ const NewWalletForm = () => {
 
 
         useEffect( () => {
-            logger.info(loggedUser)
+            // logger.info(loggedUser)
             if( loggedUser?.defaultCurrency ) {
                 setSelectedCurrency(loggedUser.defaultCurrency)
                 // logger.info(loggedUser)

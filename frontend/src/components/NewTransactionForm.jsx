@@ -6,16 +6,19 @@ import logger from "../utils/logger"
 import { createTransaction } from "../services/transaction"
 
 const NewTransactionForm = () => {
-    const amount = useField('number')
-
-    const userCategories = useUserCategoriesStore(state => state.categories)
+    
     const getUserCategories = useUserCategoriesStore(state => state.getUserCategories)
-    const userWallets = useUserWalletStore(state => state.wallets)
     const getUserWallets = useUserWalletStore(state => state.getUserWallets)
-
-
-    const [transactionType, setTransactionType] = useState('Expense')
+    
+    const userCategories = useUserCategoriesStore(state => state.categories)
+    const userWallets = useUserWalletStore(state => state.wallets)
+    const postTransaction = useUserWalletStore(state => state.postTransaction)
+    
+    
+    const amount = useField('number')
     const [selectedWallet, setSelectedWallet] = useState('')
+    const [selectedCategory, setSelectedCategory] = useState('')
+    const [transactionType, setTransactionType] = useState('EXPENSE')
 
 
     const selectedWalletObject = userWallets.find(wallet => wallet.id === selectedWallet)
@@ -23,8 +26,9 @@ const NewTransactionForm = () => {
 
 
     useEffect(() => {
-        getUserCategories()//this is a function from the store
-        getUserWallets()
+        //this store functions are now called by the parent component (HomePage)
+        // getUserCategories()//this is a function from the store
+        // getUserWallets()
         // logger.info(userWallets)
         // logger.info(selectedWalletObject)
     }, [])
@@ -43,10 +47,19 @@ const NewTransactionForm = () => {
         // logger.info(selectedWallet)
     }
 
+    const handleCategoryChange = (e) => {
+        // console.log(e)
+        // console.log(e.target.value)
+        setSelectedCategory(e.target.value)
+    }
+
 
     const handleTransactionCreation = (e) => {
         e.preventDefault()
-        createTransaction()
+        // console.log(amount.value)
+        // console.log(selectedCategory)
+        // createTransaction(amount.value, selectedWalletObject.currency, selectedCategory, selectedWallet, "NA", transactionType)
+        postTransaction(amount.value, selectedWallet.currency, selectedCategory, selectedWallet, "NA", transactionType)
     }
 
 
@@ -59,7 +72,7 @@ const NewTransactionForm = () => {
 
         <div>
             <h3>Create new Transanction</h3>
-            <form onSubmit={handleTransactionCreation}>
+            <form onSubmit={ handleTransactionCreation }>
 
 
                 <div>
@@ -69,10 +82,10 @@ const NewTransactionForm = () => {
 
 
                 <div>
-                    <label> Category: <select name="" id="">
+                    <label> Category: <select name="" id="" onChange={ (e) => handleCategoryChange(e) }>
                         <option value="">none...</option>
                         {userCategories.map(category =>
-                            <option key={category.id} > {category.name} </option>
+                            <option key={category.id} value={category.id}> {category.name} </option>
                         )}
                     </select>
                     </label>
@@ -95,9 +108,9 @@ const NewTransactionForm = () => {
                 <div>
                     <label > Transaction type
                         <select onChange={(e) => handleTransactionTypeChange(e)}>
-                            <option value="Expense">Expense</option>
-                            <option value="Earning">Earning</option>
-                            <option value="Transfer">Transfer</option>
+                            <option value="EXPENSE">Expense</option>
+                            <option value="INCOME">Income</option>
+                            <option value="TRANSFER">Transfer</option>
                         </select>
                     </label>
                 </div>
