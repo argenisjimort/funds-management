@@ -4,15 +4,29 @@ import { getPersistentUser, setPersistentUser, removePersistentUser } from '../s
 import logInService from '../services/logIn'
 import logger from '../utils/logger'
 
-export const useLoggedUserStore = create( (set, get) => ({ //return:
+export const useLoggedUserStore = create((set, get) => ({ //return:
     isLoggedIn: false,
     hasCheckedAuth: false,
     loggedUser: {},
-    checkForLogin: () => {
+    checkForLogin: async () => {
+        // console.log( getPersistentUser() )
         const userFromLocalStorage = JSON.parse(getPersistentUser())
-        // logger.info(userFromLocalStorage)
-        set( {hasCheckedAuth: true, loggedUser: userFromLocalStorage, isLoggedIn: userFromLocalStorage ? true : false} )
-        // logger.info(userFromLocalStorage ? true : false)
+        if( !userFromLocalStorage ) {
+            set({ hasCheckedAuth: true, loggedUser: {}, isLoggedIn: false })
+            return
+        }
+        // console.log( userFromLocalStorage )
+        const userLoginCheckResponse = await logInService.checkLoginTokenValidity()
+        // console.log(userLoginCheckResponse.status)
+
+        if (userLoginCheckResponse.status < 400) set({ hasCheckedAuth: true, loggedUser: userFromLocalStorage, isLoggedIn: true })
+        else {
+            set({ hasCheckedAuth: true, loggedUser: {}, isLoggedIn: false })
+            removePersistentUser()
+        }
+
+
+
         //hascheckedAuth always has to go true here,
         //userFromLocalStorage will the the response (the object or null)
         //if the object exists, is logged in will be true, if its null it will be false
@@ -25,14 +39,14 @@ export const useLoggedUserStore = create( (set, get) => ({ //return:
         const response = await logInService.login(username, password)
         // logger.info(response)
         // logger.info(response.data)
-        if(response.status == 200) {
+        if (response.status == 200) {
             setPersistentUser(response.data)
             set({ isLoggedIn: true, loggedUser: response, hasCheckedAuth: true })
         }
     },
     logOut: async () => {
         removePersistentUser()
-        set({isLoggedIn: false, loggedUser: {}} )
+        set({ isLoggedIn: false, loggedUser: {} })
     }
 
-}) )
+}))

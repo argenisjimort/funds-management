@@ -18,22 +18,25 @@ const LoginForm = () => {
         e.preventDefault()
         try {
             await logIn(username.value, password.value)
-            navigate(from, {replace: true})
+            navigate(from, { replace: true })
         } catch (error) {
             logger.error('error loggin in')
         }
-        
+
     }
 
 
     return (
-        <form onSubmit={handleLogin}>
-            <input {...username} />
-            <input {...password} />
-            {/* <input name="username" placeholder="username" />
+        <div>
+            <h3>Login</h3>
+            <form onSubmit={handleLogin}>
+                <input {...username} />
+                <input {...password} />
+                {/* <input name="username" placeholder="username" />
             <input name="passsowrd" type="password" placeholder="password" /> */}
-            <button type="submit" >Log-In</button>
-        </form>
+                <button type="submit" >Log-In</button>
+            </form>
+        </div>
     )
 }
 

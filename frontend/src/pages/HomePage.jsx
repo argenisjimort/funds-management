@@ -7,6 +7,7 @@ import { useUserWalletStore } from "../store/userWalletStore"
 import { useUserCategoriesStore } from "../store/userCategoriesStore"
 import logger from "../utils/logger"
 import BalanceBoard from "../components/BalanceBoard"
+import NewCategoryForm from "../components/NewCategoryForm"
 
 const HomePage = () => {
 
@@ -32,6 +33,7 @@ const HomePage = () => {
         <p> loggedUSer:  <b> {loggedUser.username} </b>  </p>
         < NewTransactionForm />
         < NewWalletForm />
+        < NewCategoryForm />
 
         < BalanceBoard />
 

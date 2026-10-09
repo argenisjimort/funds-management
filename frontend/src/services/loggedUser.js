@@ -21,4 +21,5 @@ const getLoggedUserWallets = async () => {
     return res
 }
 
+
 export default { getLoggedUserCategories, getLoggedUserWallets }

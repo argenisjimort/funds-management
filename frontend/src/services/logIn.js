@@ -1,4 +1,5 @@
 import { loginApiUrl } from "../utils/config"
+import { getRequestAuthHeader } from "../utils/requestAuthHeader"
 import axios from 'axios'
 
 export const login = async (username, password) => {
@@ -8,5 +9,11 @@ export const login = async (username, password) => {
     return response //response.data is axios equivalent to response.body
 }
 
+export const checkLoginTokenValidity = async () => {
+    const response = await axios.get(`${loginApiUrl}/check`, { ...getRequestAuthHeader(), validateStatus: (status) => status < 500 } )
+    // console.log(response.status)
+    return response
+}
 
-export default { login }
+
+export default { login, checkLoginTokenValidity }

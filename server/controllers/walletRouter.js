@@ -61,7 +61,7 @@ walletRouter.post(`/`, userExtractor,  async (request, response, next) => {
 
     }) // if this fails it throwns an error
     // and the response.status below is not executed
-    // as long as you use await if not even if it fails it sends 201
+    // as long as you use await, if not even if it fails it sends 201
 
     // logger.info(`after creating the waller`)
     response.status(201).send(res)

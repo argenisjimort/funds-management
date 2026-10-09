@@ -27,6 +27,9 @@ const loginTokenExtractor = (request, response, next) => {
     if (authorization && authorization.startsWith(`Bearer`)) request.loginToken = authorization.replace(`Bearer `, ``);
     else request.loginToken = null
 
+    // console.log( request.loginToken )
+
+
     next()
     }
 
@@ -34,10 +37,13 @@ const loginTokenExtractor = (request, response, next) => {
 const userExtractor = async (request, response, next) => {
     // logger.info(`before getting the .loginToken`)
     const undecodedToken = request.loginToken;
+    // console.log( `Undecoded token: `, undecodedToken)
     if (!undecodedToken) return response.status(401).send({ error: `missing TOKEN` })
 
-    // logger.info(`before the jwt.verify`)
+    // console.log( `Before decoding the token`)
     const decodedToken = jsonWebToken.verify(undecodedToken, process.env.CRYPT_SECRET);
+    //If this fails it throws an error, and (apparently, express throws an error 401 automatically)
+    // console.log( `Decoded token: `, decodedToken)
     if (!decodedToken.id) return response.status(401).send({ error: `invalid token` })
 
 

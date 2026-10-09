@@ -6,6 +6,7 @@ const jsonWebToken = require(`jsonwebtoken`)
 /** @type {import('mongoose').Model} */
 const User = require(`../models/User`)
 const { default: logger } = require('../../frontend/src/utils/logger')
+const { userExtractor } = require('../utils/middleware')
 
 
 loginRouter.post(`/`, async (request, response, next) => {
@@ -30,5 +31,9 @@ loginRouter.post(`/`, async (request, response, next) => {
 
 })
 
+
+loginRouter.get( `/check`, userExtractor, async (request, response, next) => {
+    return response.json({ ...request.user })
+} )
 
 module.exports = loginRouter
