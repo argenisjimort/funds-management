@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import loggedUserService from "../services/loggedUser";
 import { createTransaction } from "../services/transaction"
-
+import { calculateCurrentAmountInWallet } from "../utils/wallet"
 
 export const useUserWalletStore = create((set, get) => ({
     wallets: [],
@@ -9,15 +9,20 @@ export const useUserWalletStore = create((set, get) => ({
         const res = await loggedUserService.getLoggedUserWallets()
         set({ wallets: res.data })
     },
-    postTransaction: async (amount, currency, category, wallet, description="NA", type, toWallet = null) => {
+    postTransaction: async (amount, currency, category, wallet, description = "NA", type, toWallet = null) => {
         const res = await createTransaction(amount, currency, category, wallet, description, type, toWallet)
         const data = res.data
         console.log(data)
         // console.log(res.data)
         console.log(res.status)
         console.log(get().wallets)
-        const correctectWallets = get().wallets.map( wallet => wallet.id == data.wallet ? { ...wallet, transactions: wallet.transactions.concat(data) }  : wallet )
+        const correctectWallets = get().wallets.map(wallet => wallet.id == data.wallet ? { ...wallet, transactions: wallet.transactions.concat(data) } : wallet)
         console.log(correctectWallets)
-        set({wallets: correctectWallets})
-    }
+        set({ wallets: correctectWallets })
+    },
+    getGeneralBalance: () => get().wallets.reduce((totalAccumulator, wallet) => { //you add the value of each wallet's return to the totalAcc
+        //now just get each expense from the wallet, put it on an accumulator, and subtract it from the original amount
+        const currentAmountInWallet = calculateCurrentAmountInWallet(wallet)// then we add the total in the wallet to the total accumulator
+        return totalAccumulator + currentAmountInWallet
+    }, 0) || null
 }))
