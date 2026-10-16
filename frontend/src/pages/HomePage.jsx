@@ -1,13 +1,13 @@
 import { useEffect } from "react"
 import NewTransactionForm from "../components/NewTransactionForm"
 import NewWalletForm from "../components/NewWalletForm"
-import SingleWalletBoard from "../components/SingleWalletBoard"
 import { useLoggedUserStore } from "../store/loggedUserStore"
 import { useUserWalletStore } from "../store/userWalletStore"
 import { useUserCategoriesStore } from "../store/userCategoriesStore"
 import logger from "../utils/logger"
 import BalanceBoard from "../components/BalanceBoard"
 import NewCategoryForm from "../components/NewCategoryForm"
+import TransactionHistoryBoard from "../components/TransactionHistoryBoard"
 
 const HomePage = () => {
 
@@ -36,6 +36,7 @@ const HomePage = () => {
         < NewCategoryForm />
 
         < BalanceBoard />
+        <TransactionHistoryBoard />
 
         {/* < SingleWalletBoard wallet={wallets[0]} />
         < SingleWalletBoard wallet={wallets[1]} /> */}

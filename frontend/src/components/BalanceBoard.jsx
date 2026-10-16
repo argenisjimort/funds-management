@@ -1,6 +1,5 @@
 import { useUserWalletStore } from "../store/userWalletStore"
 import CentsFormater from "./CentsFormater"
-import SingleWalletBoard from "./SingleWalletBoard"
 import SingleWalletBoardInCents from "./SingleWalletBoardInCents"
 
 

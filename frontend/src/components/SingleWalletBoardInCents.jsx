@@ -1,5 +1,6 @@
 import logger from "../utils/logger"
 import CentsFormater from "./CentsFormater"
+import { calculateCurrentAmountInWallet } from "../utils/wallet"
 
 const SingleWalletBoardCents = ({ wallet }) => {
     // logger.info(wallet)
@@ -9,10 +10,7 @@ const SingleWalletBoardCents = ({ wallet }) => {
 
     if (wallet) {
 
-        const currentAmountInWallet = wallet.initialAmountInCents - wallet.transactions.reduce((accumulator, currentTransaction) => {
-            if (currentTransaction.type === "INCOME") return accumulator - currentTransaction.amountInCents
-            return accumulator + currentTransaction.amountInCents
-        }, 0) || null
+        const currentAmountInWallet = calculateCurrentAmountInWallet(wallet)
 
         return (
             <div>

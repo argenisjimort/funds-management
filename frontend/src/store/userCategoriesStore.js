@@ -14,5 +14,9 @@ export const useUserCategoriesStore = create( (set, get)=> ({
     },
     clearUserCategories: () => {
         set({ categories: [] })
+    },
+    getCategoryNameFromId: (id) => {
+        const foundCategory = get().categories.find( category => category.id === id )
+        return foundCategory.name
     }
 }))
