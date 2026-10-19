@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import  loggedUserService  from "../services/loggedUser"
 import logger from '../utils/logger'
+import { createCategory } from '../services/category'
 
 
 
@@ -15,8 +16,9 @@ export const useUserCategoriesStore = create( (set, get)=> ({
     clearUserCategories: () => {
         set({ categories: [] })
     },
-    getCategoryNameFromId: (id) => {
-        const foundCategory = get().categories.find( category => category.id === id )
-        return foundCategory.name
+    createUserCategory: async (name) => {
+        const res = await createCategory(name)
+        console.log( res.status )
+        if( res.status === 201 ) set({ categories: get().categories.concat( res.data ) })
     }
 }))

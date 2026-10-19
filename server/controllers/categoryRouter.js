@@ -17,7 +17,7 @@ categoryRouter.get(`/`, async (request, response, next) => {
 
 categoryRouter.post(`/`, userExtractor, async (request, response, next) => {
     const res = await Category.create({...request.body, user: request.user.id })
-    response.json(res)
+    response.status(201).json(res)
 })
 
 
