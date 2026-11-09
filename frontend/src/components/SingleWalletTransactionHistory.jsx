@@ -17,9 +17,10 @@ const SingleWalletTransactionHistory = ({ wallet }) => {
                 return (
 
                     <li key={transaction.id} >
-                        <div>  Amount: {centsFormater(transaction.amountInCents)}  </div>
+                        <div> Amount: {centsFormater(transaction.amountInCents)}  </div>
                         <div> Category: {categoryName} </div>
                         <div> Date: {formatIsoDate(transaction.date)} </div>
+                        <div> Type: {transaction.type } </div>
                     </li>
                 )
             }

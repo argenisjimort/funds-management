@@ -38,11 +38,11 @@ walletRouter.post(`/`, userExtractor,  async (request, response, next) => {
     const {name, initialAmount, ...restOfInfo} = request.body
     // logger.info(`after comming back to the post '/'`)
     // logger.info(name, restOfInfo)
-    console.log(initialAmount)
+    // console.log(initialAmount)
 
     const initialAmountInCents = Math.floor(initialAmount * 100)
 
-    console.log(initialAmountInCents)
+    // console.log(initialAmountInCents)
     if(name.length < 3) return response.status(400).send({error: `Wallet name too short`})
     
     // const OwnerUser = await User.findById(request.user) //request.user comes from the middleware 'userExtractor'

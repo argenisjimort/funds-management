@@ -19,6 +19,7 @@ const NewTransactionForm = () => {
     const [selectedWallet, setSelectedWallet] = useState('')
     const [selectedCategory, setSelectedCategory] = useState('')
     const [transactionType, setTransactionType] = useState('EXPENSE')
+    const [toWallet, setToWallet] = useState('')
 
 
     const selectedWalletObject = userWallets.find(wallet => wallet.id === selectedWallet)
@@ -47,6 +48,10 @@ const NewTransactionForm = () => {
         // logger.info(selectedWallet)
     }
 
+    const handleToWalletChange = (e) => {
+        setToWallet(e.target.value)
+    }
+
     const handleCategoryChange = (e) => {
         // console.log(e)
         // console.log(e.target.value)
@@ -59,7 +64,7 @@ const NewTransactionForm = () => {
         // console.log(amount.value)
         // console.log(selectedCategory)
         // createTransaction(amount.value, selectedWalletObject.currency, selectedCategory, selectedWallet, "NA", transactionType)
-        postTransaction(amount.value, selectedWallet.currency, selectedCategory, selectedWallet, "NA", transactionType)
+        postTransaction(amount.value, selectedWallet.currency, selectedCategory, selectedWallet, "NA", transactionType, toWallet)
     }
 
 
@@ -82,8 +87,8 @@ const NewTransactionForm = () => {
 
 
                 <div>
-                    <label> Category: <select name="" id="" onChange={ (e) => handleCategoryChange(e) }>
-                        <option value="">none...</option>
+                    <label> Category: <select value={selectedCategory} onChange={ (e) => handleCategoryChange(e) }>
+                        <option value="" disabled>none...</option>
                         {userCategories.map(category =>
                             <option key={category.id} value={category.id}> {category.name} </option>
                         )}
@@ -94,8 +99,8 @@ const NewTransactionForm = () => {
 
                 <div>
 
-                    <label > Accounts:  <select onChange={(e) => handleWalletChange(e)} >
-                        <option value="">none...</option>
+                    <label > Accounts:  <select value={selectedWallet} onChange={(e) => handleWalletChange(e)} >
+                        <option value="" disabled>none...</option>
                         {userWallets.map(wallet => (
                             <option key={wallet.id} value={wallet.id} > {wallet.name} </option>
                         ))}
@@ -110,16 +115,17 @@ const NewTransactionForm = () => {
                         <select onChange={(e) => handleTransactionTypeChange(e)}>
                             <option value="EXPENSE">Expense</option>
                             <option value="INCOME">Income</option>
-                            <option value="TRANSFER">Transfer</option>
+                            <option value="TRANSFER_OUT">Transfer</option>
                         </select>
                     </label>
                 </div>
 
 
-                {transactionType === "Transfer" &&
+                {transactionType === "TRANSFER_OUT" &&
                     <div>
-                        <label> transfer to:..
-                            <select >
+                        <label> transfer to: 
+                            <select value={toWallet} onChange={ (e) => handleToWalletChange(e) } >
+                                <option value="" disabled>Where to transfer...</option>
                                 {userWallets.map(wallet => (
                                     <option key={wallet.id} value={wallet.id} >{wallet.name}</option>
                                 ))}

@@ -4,7 +4,7 @@ const mongoose = require(`mongoose`)
 const transanctionSchema = mongoose.Schema({
     amountInCents: {type: Number, required: true},
     currency: {type: String, default: `COP`},
-    type: { type: String, enum: [`INCOME`, `EXPENSE`, `TRANSFER`], required: true },
+    type: { type: String, enum: [`INCOME`, `EXPENSE`, `TRANSFER_OUT`, `TRANSFER_IN`], required: true },
     category: {type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true},
     description: {type: String},
     date: {type: Date, default: Date.now, required: true},

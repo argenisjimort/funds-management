@@ -14,11 +14,19 @@ transanctionRouter.post(`/`, userExtractor, async (request, response, next) => {
     // logger.info(request.user)
     // logger.info(request.body)
 
-    const {amount, ...resOfInfo} = request.body
+    //amount, currency, category, wallet, description, type, toWallet
+    const {amount, type, wallet, toWallet, ...resOfInfo} = request.body
     const amountInCents = Math.floor(amount * 100)
     
-    const res = await Transaction.create({amountInCents, ...resOfInfo, "user": request.user.id})
-    response.json(res)
+    const res = await Transaction.create({amountInCents, type, wallet, ...resOfInfo, "user": request.user.id})
+    if (type == `TRANSFER_OUT`) {
+        const res2 = await Transaction.create({amountInCents, type: `TRANSFER_IN`, wallet: toWallet, ...resOfInfo, "user": request.user.id})
+        return response.status(201).send({ transactions: [res, res2] })
+    }
+
+
+
+    response.status(201).send({ transactions: [res] })
 })
 
 
